@@ -7,7 +7,7 @@ Users can add more cities searching by name and clicking the button 'Add city <c
  
  ## Installation
 
-Clone this repository to a local folder, the execute:
+Clone this repository to a local folder, then execute:
 
     npm install
 

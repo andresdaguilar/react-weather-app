@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import Select from 'react-select';
 import 'react-select/dist/react-select.css';
 import { Async } from 'react-select';
+import {WeatherWidget} from './weather';
+import {AddCity} from './addcity';
+import Loader from 'react-loader';
 
 export class App extends Component {
     constructor(props){
@@ -31,7 +34,7 @@ export class App extends Component {
         this.setState({currentCity:0});
         this.timerID = setInterval(
             () => this.tick(),
-            5000
+            10000
         );
     }
 
@@ -49,20 +52,17 @@ export class App extends Component {
         this.setState({currentCity : next});        
     }
 
-    handleClick(city){
-        console.log(city);        
+    handleClick(city){   
         fetch(`./api/weather/`+city.id)
         .then(result=>result.json())
         .then(items=> {
             city.weather = items;
             this.cities.push(city);
-            console.log(this.cities);
         });               
     }
 
     handleChange (selectedOption){
         this.setState({ selectedOption });
-        console.log(`Selected: ${selectedOption.label}`);
       }
 
     render() {         
@@ -85,86 +85,16 @@ export class App extends Component {
 
             )
         }else{
-            return <h1>Loading...</h1>
+            return (
+                <div>
+                    <h2>Loading cities...</h2>
+                    <Loader loaded={false} lines={13} length={20} width={10} radius={20}
+                    corners={1} rotate={0} direction={1} color="#000" speed={1}
+                    trail={60} shadow={false} hwaccel={false} className="spinner"
+                    zIndex={2e9} top="50%" left="50%" scale={1.00}
+                    loadedClassName="loadedContent" />
+                </div>
+            )
         }
-    }
-}
-
-export class WeatherWidget extends Component{
-    constructor(props){
-        super(props);
-    }
-    render(){
-        return(
-        <div className="card">
-            <div className="card-header">
-                <h3>{this.props.city}</h3>
-                <WeatherState icon={this.props.icon}/>
-                <p>{this.props.state}</p>
-            </div>
-            <div className="card-body">
-                <h2>{this.props.temp} °C</h2>                  
-            </div>  
-
-        </div>
-        )
-    }
-}
-
-export class WeatherState extends Component{    
-    constructor(props){
-        super(props);
-        this.urlImg = 'https://www.metaweather.com/static/img/weather/';
-    }
-    render(){
-        return <img src={this.urlImg+this.props.icon+".svg"} className="imageState"/>
-    }    
-}
-
-export class AddCity extends Component{
-    constructor(props){
-        super(props);       
-        this.url = 'https://www.metaweather.com/api/location/search/?query=';
-        this.state = {value:''};
-        this.handleClick = this.handleClick.bind(this);          
-        this.updateValue = this.updateValue.bind(this);          
-    }
-    getOptions(input){        
-        return fetch(`/api/search/${input}`)
-        .then((response) => {
-        return response.json();
-        }).then((json) => {                  
-            return { options: json };
-        });
-      
-        
-    }
-    handleClick(e){
-        //var addCity = {value: this.state.id, city: e.title};
-        this.props.onClick({id: this.state.id, name: this.state.name});
-        this.setState({id: 0, name: ''});
-    }
-
-    updateValue(e){
-       this.setState({id: e.woeid, name: e.title});
-    }
-
-    render(){
-        const { selectedOption } = this.state;
-        const value = selectedOption && selectedOption.value;        
-        return(
-            <div className="card card-body">                 
-               <Async
-                valueKey="woeid" labelKey="title"
-                name="title"
-                value={this.state.value}
-                multi={false}
-                loadOptions={this.getOptions}
-                onChange={this.updateValue.bind(this)}
-                className="select-custom"
-                />
-                <button id="add" className="btn btn-default" onClick={this.handleClick.bind(this)} >Add City {this.state.name}</button>
-            </div>
-        )
     }
 }

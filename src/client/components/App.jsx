@@ -61,10 +61,6 @@ export class App extends Component {
         });               
     }
 
-    handleChange (selectedOption){
-        this.setState({ selectedOption });
-      }
-
     render() {         
 
         if (this.cities.length > 0){           

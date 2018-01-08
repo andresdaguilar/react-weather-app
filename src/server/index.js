@@ -12,6 +12,7 @@ app.get('/api/getCities', function(req, res){
 });
 
 app.get('/api/search/:location*', function(req, res){
+    console.log(req.params.location);
     if (req.params.location != ""){
         let options = {
             url: 'https://www.metaweather.com/api/location/search/?query='+req.params.location
@@ -23,6 +24,10 @@ app.get('/api/search/:location*', function(req, res){
     }    
 });
 
+app.get('/api/search/', function(req, res){    
+    res.send(null);
+});
+
 app.get('/api/weather/:location*', function(req, res){
     let options = {
         url: 'https://www.metaweather.com/api/location/'+req.params.location
@@ -30,7 +35,3 @@ app.get('/api/weather/:location*', function(req, res){
     };
     request(options).pipe(res);
 });
-
-app.get('/getLoadingImage', function(req, res){
-    res.sendFile('../client/images/loading.gif');
-})

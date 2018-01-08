@@ -17,13 +17,15 @@ export class AddCity extends Component{
         return response.json();
         }).then((json) => {                  
             return { options: json };
-        });
-      
+        });  
         
     }
-    handleClick(e){
-        this.props.onClick({id: this.state.id, name: this.state.name});
-        this.setState({id: 0, name: ''});
+    handleClick(e){        
+        if (this.state.name != '' && this.state.name != undefined){
+            this.props.onClick({id: this.state.id, name: this.state.name});
+            this.setState({id: 0, name: ''});
+        }
+        
     }
 
     updateValue(e){
@@ -36,15 +38,15 @@ export class AddCity extends Component{
         return(
             <div className="card card-body">                 
                <Async
-                valueKey="woeid" labelKey="title"
-                name="title"
-                value={this.state.value}
-                multi={false}
-                loadOptions={this.getOptions}
-                onChange={this.updateValue.bind(this)}
-                className="select-custom"
+                    valueKey="woeid" labelKey="title"
+                    name="title"
+                    value={this.state.value}
+                    multi={false}
+                    loadOptions={this.getOptions}
+                    onChange={this.updateValue.bind(this)}
+                    className="select-custom"
                 />
-                <button id="add" className="btn btn-default" onClick={this.handleClick.bind(this)} >Add City {this.state.name}</button>
+                <button id="add" disabled={this.state.name == ''} className="btn btn-default" onClick={this.handleClick.bind(this)} >Add City {this.state.name}</button>
             </div>
         )
     }

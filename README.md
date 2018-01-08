@@ -14,3 +14,7 @@ Clone this repository to a local folder, then execute:
 Once it finished downloading the dependencies, run:
 
     npm start
+
+Check the app running:
+
+    http://localhost:3000/
